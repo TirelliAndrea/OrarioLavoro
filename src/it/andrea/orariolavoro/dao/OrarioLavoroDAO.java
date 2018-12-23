@@ -1,11 +1,13 @@
 package it.andrea.orariolavoro.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -18,15 +20,15 @@ public class OrarioLavoroDAO {
 	
 	private Connection connection=null;
 	private ResultSet rsListaGiorni = null;
-	private Statement stantement = null;
+	private Statement statement = null;
 	private String dbURL = "jdbc:ucanaccess://OrarioLavoroDB.accdb";
 	private String sqlOrarioLavoro = "SELECT * FROM Orario";
 	private String sqlAggiungiOrario = "INSERT INTO Orario (Data,OraArrivo) VALUES (?,?) ";
 	private List<OrarioLavoro> lstOrario = null;
 	private PreparedStatement pstOrarioLavoro = null;
-	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-	
+	//private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	//private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+	private OrarioLavoro orarioLavoro = null;
 	
 	public OrarioLavoroDAO (){
 		
@@ -40,14 +42,16 @@ public class OrarioLavoroDAO {
 		
 		try {
 		
-			stantement = connection.createStatement();
-			rsListaGiorni = stantement.executeQuery(sqlOrarioLavoro);
+			statement = connection.createStatement();
+			rsListaGiorni = statement.executeQuery(sqlOrarioLavoro);
 			while (rsListaGiorni.next()){
-				LocalDate date = LocalDate.parse(rsListaGiorni.getString("Data"),dateFormatter);
-				LocalTime ora = LocalTime.parse(rsListaGiorni.getString("OraArrivo"),timeFormatter);
-				OrarioLavoro orario = new OrarioLavoro(date,ora);
+			
+				LocalDate data = rsListaGiorni.getDate("Data").toLocalDate();
+				LocalTime time = rsListaGiorni.getTime("OraArrivo").toLocalTime();
 				
-				lstOrario.add(orario);
+				orarioLavoro = new OrarioLavoro(data,time);
+				
+				lstOrario.add(orarioLavoro);
 				}
 			
 			
@@ -64,9 +68,12 @@ public class OrarioLavoroDAO {
 	public void setOrarioLavoro (OrarioLavoro nuovoOrario){
 		
 		try {
+			
 			pstOrarioLavoro = connection.prepareStatement(sqlAggiungiOrario);
-			pstOrarioLavoro.setString(1, dateFormatter.format(nuovoOrario.getDataGiorno()));
-			pstOrarioLavoro.setString(2, timeFormatter.format(nuovoOrario.getOraArrivo()));
+			Date data = Date.valueOf(orarioLavoro.getDataGiorno());
+			Time time = Time.valueOf(orarioLavoro.getOraArrivo());
+			pstOrarioLavoro.setDate(1, data);
+			pstOrarioLavoro.setTime(2, time);
 			pstOrarioLavoro.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

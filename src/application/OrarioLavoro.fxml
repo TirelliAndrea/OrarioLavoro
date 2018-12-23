@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrarioLavoroController">
+<BorderPane prefHeight="390.0" prefWidth="312.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OrarioLavoroController">
    <center>
       <TableView fx:id="tblOrario" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>

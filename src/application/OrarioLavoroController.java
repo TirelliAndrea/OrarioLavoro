@@ -42,6 +42,9 @@ public class OrarioLavoroController {
     private OrarioLavoroDAO orarioLavoroDAO;
     
     
+    public OrarioLavoroController(){
+    	this.caricaTabella();
+    }
     
  
     public void setOrarioLavoroDAO(OrarioLavoroDAO orarioLavoroDAO) {
@@ -58,9 +61,10 @@ public class OrarioLavoroController {
     	System.out.println(lst.size());
     	tblOrario.getColumns().clear();
     	
-    	colData = new TableColumn<>("Data");
-    	colOraArrivo = new TableColumn<>("Ora Arrivo");
+    	TableColumn<OrarioLavoro, LocalTime>colData = new TableColumn<>("Data");
+    	TableColumn<OrarioLavoro, LocalDate >colOraArrivo = new TableColumn<>("Ora Arrivo");
     	
+   
     	colData.setCellValueFactory(new PropertyValueFactory<>("dataGiorno"));
     	colOraArrivo.setCellValueFactory(new PropertyValueFactory<>("oraArrivo"));
     	
